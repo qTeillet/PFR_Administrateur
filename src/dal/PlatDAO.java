@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import bo.Categorie;
 import bo.Plat;
 
 public class PlatDAO {
@@ -82,13 +83,17 @@ public class PlatDAO {
 	}
 	
 	private Plat convertResultSetToPlat(ResultSet rs) throws SQLException {
+
 		Plat plat = new Plat();
 		plat.setId(rs.getInt("id"));
 		plat.setNom(rs.getString("nom"));
 		plat.setPrix(rs.getFloat("prix"));
 		if (rs.getString("description") != null)
 			plat.setDescription(rs.getString("description"));
-		// plat.setCategorie(rs.get); prevoir la catégorie
+		int idCategorie = rs.getInt("id_categorie");
+		Categorie categorie = new Categorie();
+		categorie.setId(idCategorie);
+		plat.setCategorie(categorie);
 			
 		return plat;
 	}
