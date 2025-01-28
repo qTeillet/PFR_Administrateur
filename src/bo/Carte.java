@@ -23,6 +23,11 @@ public class Carte {
         this.plats = plats;
     }
 
+    public Carte(String nom, String description) {
+        this.nom = nom;
+        this.description = description;
+    }
+
     public Carte() {
     }
 

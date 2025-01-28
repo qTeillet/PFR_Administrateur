@@ -1,5 +1,8 @@
 package controller;
 
+import bll.CarteBLL;
+import exceptions.CarteException;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -51,34 +54,32 @@ public class TestAdmin {
 	        } catch (InputMismatchException e) {
 	        	System.err.println("Choix invalide.");
 	        	choix = -1;
-	        }
+	        } finally {
+				scan.nextLine();
+			}
 		} while (choix < 1 || choix > 6);
 		return choix;
 	}
 
 	private static void sousMenuCreationCarte(){
-		int choix;
-		do {
-			System.out.println("Voulez-vous saisir la carte manuellement, ou à l'aide d'un fichier ?");
-			System.out.format(" %-7s %s\n", "1.", "Ajouter manuellement\n");
-			System.out.format(" %-7s %s\n", "2.", "Utiliser un fichier\n");
-			try {
-				choix = scan.nextInt();
-			} catch (InputMismatchException e) {
-				System.err.println("Choix invalide.");
-				choix = -1;
-			} finally {
-				scan.nextLine();
-			}
-		} while (choix < 1 || choix > 2);
 
-		//switch à updater avec les tickets suivants
-		switch (choix){
-			case 1:
-				break;
-			case 2:
-				break;
+		String nom;
+		String description;
+
+		System.out.println("Nom de la carte :");
+		nom = scan.nextLine();
+		System.out.println("Description de la carte :");
+		description = scan.nextLine();
+
+		CarteBLL bll = new CarteBLL();
+		try{
+			bll.insert(nom, description);
+			System.out.println("Carte créée avec succès !");
+		}catch (CarteException e){
+			System.out.println("Erreur lors de la création de la carte : " + e.getMessage());
 		}
+
+
 	}
 
 }
