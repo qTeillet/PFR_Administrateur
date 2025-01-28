@@ -22,6 +22,7 @@ public class TestAdmin {
 			case 3:
 				break;
 			case 4:
+				sousMenuCreationCarte();
 				break;
 			case 5:
 				break;
@@ -53,6 +54,29 @@ public class TestAdmin {
 	        }
 		} while (choix < 1 || choix > 6);
 		return choix;
+	}
+
+	private static void sousMenuCreationCarte(){
+		int choix;
+		do {
+			System.out.println("Voulez-vous saisir la carte manuellement, ou à l'aide d'un fichier ?");
+			System.out.format(" %-7s %s\n", "1.", "Ajouter manuellement\n");
+			System.out.format(" %-7s %s\n", "2.", "Utiliser un fichier\n");
+			try {
+				choix = scan.nextInt();
+			} catch (InputMismatchException e) {
+				System.err.println("Choix invalide.");
+				choix = -1;
+			}
+		} while (choix < 1 || choix > 2);
+
+		//switch à updater avec les tickets suivants
+		switch (choix){
+			case 1:
+				break;
+			case 2:
+				break;
+		}
 	}
 
 }
