@@ -23,16 +23,12 @@ public class Restaurant {
 		this.horaires = horaires;
 	}
 	
-	public Restaurant(String nom, String adresse, String url_image, Carte carte, List<Table> tables,
-			List<Horaire> horaires) {
+	public Restaurant(String nom, String adresse, String url_image) {
 		this.nom = nom;
 		this.adresse = adresse;
 		this.url_image = url_image;
-		this.carte = carte;
-		this.tables = tables;
-		this.horaires = horaires;
 	}
-
+	
 	public Restaurant() {}
 
 	public int getId() {
@@ -93,8 +89,11 @@ public class Restaurant {
 
 	@Override
 	public String toString() {
-		return "Restaurant [id=" + id + ", nom=" + nom + ", adresse=" + adresse + ", url_image=" + url_image
-				+ ", carte=" + carte + ", tables=" + tables + ", horaires=" + horaires + "]";
+		return  String.format("| %2d | %-10s | %-20s | %-20s\n",
+						id,
+						nom,
+						adresse,
+						url_image);	
 	}
 	
 }
