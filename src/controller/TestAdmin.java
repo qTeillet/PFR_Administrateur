@@ -3,6 +3,9 @@ package controller;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+
+
+
 public class TestAdmin {
 	private static Scanner scan;
 
@@ -23,7 +26,7 @@ public class TestAdmin {
 				break;
 			case 4:
 				break;
-			case 5:
+			case 5: 
 				break;
 			}
 		} while (choix != 6);
