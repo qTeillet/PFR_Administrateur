@@ -1,5 +1,8 @@
 package controller;
 
+import bll.CarteBLL;
+import exceptions.CarteException;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -25,6 +28,7 @@ public class TestAdmin {
 			case 3:
 				break;
 			case 4:
+				sousMenuCreationCarte();
 				break;
 			case 5: 
 				break;
@@ -53,9 +57,32 @@ public class TestAdmin {
 	        } catch (InputMismatchException e) {
 	        	System.err.println("Choix invalide.");
 	        	choix = -1;
-	        }
+	        } finally {
+				scan.nextLine();
+			}
 		} while (choix < 1 || choix > 6);
 		return choix;
+	}
+
+	private static void sousMenuCreationCarte(){
+
+		String nom;
+		String description;
+
+		System.out.println("Nom de la carte :");
+		nom = scan.nextLine();
+		System.out.println("Description de la carte :");
+		description = scan.nextLine();
+
+		CarteBLL bll = new CarteBLL();
+		try{
+			bll.insert(nom, description);
+			System.out.println("Carte créée avec succès !");
+		}catch (CarteException e){
+			System.out.println("Erreur lors de la création de la carte : " + e.getMessage());
+		}
+
+
 	}
 
 }
