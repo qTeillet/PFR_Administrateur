@@ -1,5 +1,6 @@
 package controller;
 
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -7,9 +8,14 @@ import bll.RestaurantBLL;
 import bo.Restaurant;
 import exceptions.RestaurantException;
 
+import bll.CarteBLL;
+import exceptions.CarteException;
+
+
 
 public class TestAdmin {
 	private static Scanner scan;
+
 	private static RestaurantBLL restaurantBLL = new RestaurantBLL();
 
 	public static void main(String[] args) {
@@ -29,8 +35,9 @@ public class TestAdmin {
 			case 3:
 				break;
 			case 4:
+        sousMenuCreationCarte();
 				break;
-			case 5:
+			case 5: 
 				break;
 			}
 		} while (choix != 6);
@@ -91,16 +98,32 @@ public class TestAdmin {
 	            }
 	            
 	            Restaurant restaurant = restaurantBLL.insert(nom, adresse, url_image);
-				System.out.println("Ajout du restaurant réussi !");
-				System.out.println(restaurant);
-				System.out.println("Entrée pour retourner au menu principal.");
+		          System.out.println("Ajout du restaurant réussi !");
+				      System.out.println(restaurant);
+				      System.out.println("Entrée pour retourner au menu principal.");
 
 	        } catch (RestaurantException e) {
-				System.err.println("La création du restaurant à échoué :");
-				System.err.println(e.getMessage());
-	        } finally {
-				scan.nextLine();
-			}
+				      System.err.println("La création du restaurant à échoué :");
+				      System.err.println(e.getMessage());
+	          } finally {
+				  scan.nextLine();
+			    }
 	    }
+  
+	private static void sousMenuCreationCarte(){
+		String nom;
+		String description;
 
+		System.out.println("Nom de la carte :");
+		nom = scan.nextLine();
+		System.out.println("Description de la carte :");
+		description = scan.nextLine();
+
+		CarteBLL bll = new CarteBLL();
+		try{
+			bll.insert(nom, description);
+			System.out.println("Carte créée avec succès !");
+		} catch (CarteException e){
+			System.out.println("Erreur lors de la création de la carte : " + e.getMessage());
+		}
 }
