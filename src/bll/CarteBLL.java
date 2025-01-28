@@ -23,7 +23,7 @@ public class CarteBLL {
         }
 
         if (carte.getNom().length() > 30){
-            throw new CarteException("Le nom de la carte doit faire moins de 3 caractères !");
+            throw new CarteException("Le nom de la carte doit faire moins de 30 caractères !");
         }
 
         if(carte.getDescription() != null && carte.getDescription().length() > 255){
