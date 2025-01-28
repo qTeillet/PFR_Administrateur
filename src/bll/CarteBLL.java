@@ -6,7 +6,7 @@ import exceptions.CarteException;
 
 public class CarteBLL {
 
-    public void insert(String nom, String description) throws CarteException {
+    public Carte insert(String nom, String description) throws CarteException {
 
         Carte carte = new Carte(nom, description);
 
@@ -14,7 +14,7 @@ public class CarteBLL {
 
         CarteDAO dao = new CarteDAO();
         dao.insert(carte);
-
+        return carte;
     }
 
     public void checkCarte(Carte carte) throws CarteException {

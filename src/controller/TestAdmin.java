@@ -5,6 +5,9 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import bll.RestaurantBLL;
+import bo.Carte;
+import bo.Categorie;
+import bo.Plat;
 import bo.Restaurant;
 import exceptions.RestaurantException;
 
@@ -110,9 +113,10 @@ public class TestAdmin {
 			    }
 	    }
   
-	private static void sousMenuCreationCarte(){
+	private static void sousMenuCreationCarte() {
 		String nom;
 		String description;
+		int choix;
 
 		System.out.println("Nom de la carte :");
 		nom = scan.nextLine();
@@ -120,10 +124,55 @@ public class TestAdmin {
 		description = scan.nextLine();
 
 		CarteBLL bll = new CarteBLL();
-		try{
-			bll.insert(nom, description);
+		try {
+			Carte carte = bll.insert(nom, description);
 			System.out.println("Carte créée avec succès !");
-		} catch (CarteException e){
+			do{
+				System.out.println("Voulez-vous ajouter un plat à la carte ?");
+				System.out.format(" %-7s %s\n", "1.", "Oui\n");
+				System.out.format(" %-7s %s\n", "2.", "Non\n");
+				try{
+					choix = scan.nextInt();
+					Plat plat = saisiePlat();
+					carte.ajouterPlat(plat);
+					associerCartePlatDansBDD();
+				} catch (InputMismatchException e) {
+					System.err.println("Choix invalide.");
+					choix = -1;
+				} finally {
+					scan.nextLine();
+				}
+			}while(choix != 2);
+		} catch (CarteException e) {
 			System.out.println("Erreur lors de la création de la carte : " + e.getMessage());
 		}
+	}
+
+	private static Plat saisiePlat(){
+		Plat plat = new Plat();
+		String nom;
+		String description;
+		float prix;
+		String categorie;
+
+		System.out.println("Nom du plat à ajouter : ");
+		nom = scan.nextLine();
+		plat.setNom(nom);
+
+		System.out.println("Description du plat à ajouter : ");
+		description = scan.nextLine();
+		plat.setDescription(description);
+
+		System.out.println("Prix du plat à ajouter : ");
+		prix = scan.nextFloat();
+		scan.nextLine();
+		plat.setPrix(prix);
+
+		System.out.println("Catégorie du plat à ajouter : ");
+		categorie = scan.nextLine();
+		//faire un check sur la validité de la catégorie
+		plat.setCategorie(new Categorie(categorie));
+
+		return plat;
+	}
 }
