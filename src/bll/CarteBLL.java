@@ -18,7 +18,7 @@ public class CarteBLL {
     }
 
     public void checkCarte(Carte carte) throws CarteException {
-        if(carte.getNom() == null){
+        if(carte.getNom() == null || carte.getNom().isBlank()){
             throw new CarteException("Le nom de la carte doit être renseigné !");
         }
 
