@@ -21,7 +21,7 @@ public class CarteDAO {
 
             Connection cnx = DriverManager.getConnection("jdbc:sqlserver://"
                     + url
-                    + ";databasename=DB_MATERIEL;username="
+                    + ";databasename=PFR;username="
                     + username
                     + ";password="
                     + password

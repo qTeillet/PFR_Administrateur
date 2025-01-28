@@ -67,6 +67,8 @@ public class TestAdmin {
 			} catch (InputMismatchException e) {
 				System.err.println("Choix invalide.");
 				choix = -1;
+			} finally {
+				scan.nextLine();
 			}
 		} while (choix < 1 || choix > 2);
 
