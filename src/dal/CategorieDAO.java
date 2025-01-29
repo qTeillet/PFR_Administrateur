@@ -11,6 +11,7 @@ import java.util.List;
 import bo.Categorie;
 
 public class CategorieDAO {
+
 	String url = System.getenv("FIL_ROUGE_URL");
     String username = System.getenv("FIL_ROUGE_USERNAME");
     String password = System.getenv("FIL_ROUGE_PASSWORD");
@@ -27,6 +28,7 @@ public class CategorieDAO {
                     + ";password="
                     + password
                     + ";trustservercertificate=true");
+
             
             if(!cnx.isClosed()){
 
@@ -37,12 +39,15 @@ public class CategorieDAO {
                 }
 
             }
+
             cnx.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return categories;
     }
+
 	
 	private Categorie convertResultSetToCategorie(ResultSet rs) throws SQLException {
 		Categorie categorie = new Categorie();
@@ -51,3 +56,4 @@ public class CategorieDAO {
 		return categorie;
 	}
 }
+

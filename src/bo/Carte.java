@@ -31,6 +31,10 @@ public class Carte {
     public Carte() {
     }
 
+    public void ajouterPlat(Plat plat){
+        plats.add(plat);
+    }
+
     public int getId() {
         return id;
     }

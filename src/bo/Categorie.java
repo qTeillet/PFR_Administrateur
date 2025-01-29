@@ -1,5 +1,8 @@
 package bo;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Categorie {
 	private int id;
 	private String libelle;
@@ -32,8 +35,10 @@ public class Categorie {
 		this.libelle = libelle;
 	}
 
+
     @Override
     public String toString() {
         return libelle;
     }
+
 }

@@ -21,6 +21,7 @@ public class PlatDAO {
         
 		List<Plat> plats = new ArrayList<>();
         
+
         try {
 
             Connection cnx = DriverManager.getConnection("jdbc:sqlserver://"
@@ -30,6 +31,8 @@ public class PlatDAO {
                     + ";password="
                     + password
                     + ";trustservercertificate=true");
+
+
             
             if(!cnx.isClosed()){
 
@@ -43,6 +46,7 @@ public class PlatDAO {
                 ResultSet rs = ps.executeQuery();
                 if(rs.next()){
                     plats.add(convertResultSetToPlat(rs));
+
                 }
 
             }
@@ -52,8 +56,53 @@ public class PlatDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    
         return plats;
+    
     }
+
+
+ 
+
+    public void associerPlatCarte(Plat plat, Carte carte){
+
+        String url = System.getenv("FIL_ROUGE_URL");
+        String username = System.getenv("FIL_ROUGE_USERNAME");
+        String password = System.getenv("FIL_ROUGE_PASSWORD");
+
+        try {
+
+            Connection cnx = DriverManager.getConnection("jdbc:sqlserver://"
+                    + url
+                    + ";databasename=PFR;username="
+                    + username
+                    + ";password="
+                    + password
+                    + ";trustservercertificate=true");
+
+
+            if(! cnx.isClosed()){
+
+                PreparedStatement ps = cnx.prepareStatement(
+                        "INSERT INTO asso_cartes_plats (id_carte, id_plat)" +
+                                "VALUES (?, ?)");
+                ps.setInt(1, carte.getId());
+                ps.setInt(2, plat.getId());
+
+                ps.executeUpdate();
+
+            }
+
+            cnx.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+        
 
 	public void insert(Plat plat) {
 		 try {
@@ -104,4 +153,5 @@ public class PlatDAO {
 		return plat;
 	}
 	
+
 }

@@ -1,6 +1,7 @@
 package bo;
 
 public class Plat {
+
 	private int id;
 	private String nom;
 	private float prix;
@@ -65,3 +66,4 @@ public class Plat {
 		this.categorie = categorie;
 	}
 }
+

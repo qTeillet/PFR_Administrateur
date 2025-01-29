@@ -4,8 +4,15 @@ package controller;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import bll.CategorieBLL;
+import bll.PlatBLL;
 import bll.RestaurantBLL;
+import bo.Carte;
+import bo.Categorie;
+import bo.Plat;
 import bo.Restaurant;
+import dal.PlatDAO;
+import exceptions.PlatException;
 import exceptions.RestaurantException;
 
 import bll.CarteBLL;
@@ -110,9 +117,10 @@ public class TestAdmin {
 			    }
 	    }
   
-	private static void sousMenuCreationCarte(){
+	private static void sousMenuCreationCarte() {
 		String nom;
 		String description;
+		int choix;
 
 		System.out.println("Nom de la carte :");
 		nom = scan.nextLine();
@@ -120,11 +128,96 @@ public class TestAdmin {
 		description = scan.nextLine();
 
 		CarteBLL bll = new CarteBLL();
-		try{
-			bll.insert(nom, description);
+		try {
+			Carte carte = bll.insert(nom, description);
 			System.out.println("Carte créée avec succès !");
-		} catch (CarteException e){
+			do{
+				System.out.println("Voulez-vous ajouter un plat à la carte ?");
+				System.out.format(" %-7s %s\n", "1.", "Oui\n");
+				System.out.format(" %-7s %s\n", "2.", "Non\n");
+				try{
+					choix = scan.nextInt();
+					if (choix == 2){
+						continue;
+					}
+				} catch (InputMismatchException e) {
+					System.err.println("Choix invalide.");
+					choix = -1;
+				} finally {
+					scan.nextLine();
+				}
+
+				Plat plat = saisiePlat();
+				carte.ajouterPlat(plat);
+				try {
+					PlatBLL platBLL = new PlatBLL();
+					platBLL.insert(plat);
+					platBLL.associerPlatCarte(plat, carte);
+				} catch (PlatException e){
+					System.err.println("Erreur lors de la création du plat : " + e.getMessage());
+				}
+				System.out.println("Plat ajouté avec succès.");
+
+			}while(choix != 2);
+			System.out.println("les plats ont tous bien été ajoutés");
+		} catch (CarteException e) {
 			System.out.println("Erreur lors de la création de la carte : " + e.getMessage());
 		}
 	}
+
+
+	private static Plat saisiePlat(){
+		Plat plat = new Plat();
+		String nom;
+		String description;
+		float prix;
+		int choix;
+
+		System.out.println("Nom du plat à ajouter : ");
+		nom = scan.nextLine();
+		plat.setNom(nom);
+
+		System.out.println("Description du plat à ajouter : ");
+		description = scan.nextLine();
+		plat.setDescription(description);
+
+		System.out.println("Prix du plat à ajouter : ");
+		prix = scan.nextFloat();
+		scan.nextLine();
+		plat.setPrix(prix);
+
+		do {
+			System.out.println("Catégorie du plat à ajouter : ");
+			System.out.format(" %-7s %s\n", "1.", "Entrée\n");
+			System.out.format(" %-7s %s\n", "2.", "Plat\n");
+			System.out.format(" %-7s %s\n", "3.", "Dessert\n");
+			System.out.format(" %-7s %s\n", "4.", "Boisson\n");
+			try {
+				choix = scan.nextInt();
+			} catch (InputMismatchException e) {
+				System.err.println("Choix invalide.");
+				choix = -1;
+			} finally {
+				scan.nextLine();
+			}
+		} while (choix < 1 || choix > 4);
+
+		switch (choix) {
+			case 1:
+				plat.setCategorie(new Categorie(1, "Entrée"));
+				break;
+			case 2:
+				plat.setCategorie(new Categorie(2, "Plat"));
+				break;
+			case 3:
+				plat.setCategorie(new Categorie(3, "Dessert"));
+				break;
+			case 4:
+				plat.setCategorie(new Categorie(4, "Boisson"));
+				break;
+		}
+
+		return plat;
+	}
 }
+

@@ -1,5 +1,4 @@
 package bll;
-
 import java.util.List;
 
 import bo.Categorie;
@@ -29,5 +28,6 @@ public class CategorieBLL {
 		throw new CategorieException(
             "La catégorie doit être une des valeurs suivantes : " + categoriesBLL + ". Valeur saisie : " + categorie.getLibelle()
         );
-	}
 }
+
+
