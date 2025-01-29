@@ -43,6 +43,36 @@ public class CarteDAO {
 
 		public void insert(Carte carte){
 
+	public Carte select(int id) {
+		Carte carte = null;
+		try {
+			Connection cnx = DriverManager.getConnection("jdbc:sqlserver://"
+					+ url
+					+";databasename=PFR;username="
+					+ username
+					+ ";password="
+					+ password
+					+ ";trustservercertificate=true");
+			
+			if(!cnx.isClosed()) {
+				
+				PreparedStatement ps = cnx.prepareStatement("SELECT * FROM cartes WHERE id = ?");
+				ps.setInt(1, id);
+				ResultSet rs = ps.executeQuery();
+				
+				while (rs.next()) {
+					carte = convertResultSetToCarte(rs);
+				}
+			}
+			cnx.close();
+		} catch (SQLException e) {
+			e.printStackTrace();		
+		}
+		
+		return carte;
+	}
+        public void insert(Carte carte){
+
         try {
 
             Connection cnx = DriverManager.getConnection("jdbc:sqlserver://"
@@ -88,5 +118,4 @@ public class CarteDAO {
     			carte.setNomRestaurant(rs.getString("nom_restaurant"));
     		return carte;
 		}
-
 }
