@@ -23,6 +23,13 @@ public class Restaurant {
 		this.horaires = horaires;
 	}
 	
+	public Restaurant(String nom, String adresse, String url_image, Carte carte) {
+		this.nom = nom;
+		this.adresse = adresse;
+		this.url_image = url_image;
+		this.carte = carte;
+	}
+	
 	public Restaurant(String nom, String adresse, String url_image) {
 		this.nom = nom;
 		this.adresse = adresse;
@@ -66,7 +73,7 @@ public class Restaurant {
 	public Carte getCarte() {
 		return carte;
 	}
-
+	
 	public void setCarte(Carte carte) {
 		this.carte = carte;
 	}

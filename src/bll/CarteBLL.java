@@ -5,8 +5,13 @@ import dal.CarteDAO;
 import exceptions.CarteException;
 
 public class CarteBLL {
+	
+	public Carte select(int id) {
+		CarteDAO dao = new CarteDAO();
+		return dao.select(id);	
+	}
 
-    public void insert(String nom, String description) throws CarteException {
+    public Carte insert(String nom, String description) throws CarteException {
 
         Carte carte = new Carte(nom, description);
 
@@ -14,6 +19,7 @@ public class CarteBLL {
 
         CarteDAO dao = new CarteDAO();
         dao.insert(carte);
+        return carte;
 
     }
 
