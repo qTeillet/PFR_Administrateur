@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import bo.Categorie;
+import bo.Carte;
 import bo.Plat;
 
 public class PlatDAO {
@@ -44,7 +44,7 @@ public class PlatDAO {
                         "WHERE ca.id = ?");
                 ps.setInt(1, idCarte);
                 ResultSet rs = ps.executeQuery();
-                if(rs.next()){
+                while(rs.next()){
                     plats.add(convertResultSetToPlat(rs));
 
                 }
@@ -60,9 +60,6 @@ public class PlatDAO {
         return plats;
     
     }
-
-
- 
 
     public void associerPlatCarte(Plat plat, Carte carte){
 
@@ -145,10 +142,7 @@ public class PlatDAO {
 		plat.setPrix(rs.getFloat("prix"));
 		if (rs.getString("description") != null)
 			plat.setDescription(rs.getString("description"));
-		int idCategorie = rs.getInt("id_categorie");
-		Categorie categorie = new Categorie();
-		categorie.setId(idCategorie);
-		plat.setCategorie(categorie);
+		plat.setNomCategorie(rs.getString("categorie_libelle"));;
 			
 		return plat;
 	}

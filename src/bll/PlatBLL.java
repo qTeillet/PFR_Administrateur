@@ -1,20 +1,27 @@
 package bll;
 
+import java.util.List;
+
 import bo.Carte;
 import bo.Plat;
-import dal.CarteDAO;
 import dal.PlatDAO;
 import exceptions.CarteException;
 import exceptions.PlatException;
 
 public class PlatBLL {
+	
+	private PlatDAO dao = new PlatDAO();
+	
+	public List<Plat> select(int idCarte) {
+		return dao.select(idCarte);
+	}
+	
 
     //insert directement avec un plat parce que c'est plus simple
     public void insert(Plat plat) throws PlatException {
 
         checkPlat(plat);
 
-        PlatDAO dao = new PlatDAO();
         dao.insert(plat);
     }
 

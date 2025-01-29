@@ -8,6 +8,7 @@ public class Carte {
     private int id;
     private String nom;
     private String description;
+    private String nomRestaurant;
     private List<Plat> plats = new ArrayList<>();
 
     public Carte(int id, String nom, String description, List<Plat> plats) {
@@ -66,4 +67,25 @@ public class Carte {
     public void setPlats(List<Plat> plats) {
         this.plats = plats;
     }
+	
+    public String getNomRestaurant() {
+		return nomRestaurant;
+	}
+
+	public void setNomRestaurant(String nomRestaurant) {
+		this.nomRestaurant = nomRestaurant;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("| %-4d | %-20s | %-100s | %-20s |",
+				id,
+				nom,
+				description, 
+				nomRestaurant); 
+	}
+
+
+    
+    
 }
