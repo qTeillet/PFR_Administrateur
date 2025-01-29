@@ -1,7 +1,5 @@
 package bo;
 
-import java.util.Arrays;
-import java.util.List;
 
 public class Categorie {
 	private int id;

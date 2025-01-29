@@ -1,18 +1,25 @@
 package bll;
 
+import java.util.List;
+
 import bo.Carte;
 import dal.CarteDAO;
 import exceptions.CarteException;
 
 public class CarteBLL {
 
+	private CarteDAO dao = new CarteDAO();
+	
+	public List<Carte> select() {
+		return dao.select();
+	}
+	
     public Carte insert(String nom, String description) throws CarteException {
 
         Carte carte = new Carte(nom, description);
 
         checkCarte(carte);
 
-        CarteDAO dao = new CarteDAO();
         dao.insert(carte);
         return carte;
     }

@@ -28,6 +28,6 @@ public class CategorieBLL {
 		throw new CategorieException(
             "La catégorie doit être une des valeurs suivantes : " + categoriesBLL + ". Valeur saisie : " + categorie.getLibelle()
         );
+	}
 }
-
 

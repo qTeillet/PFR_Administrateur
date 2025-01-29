@@ -7,6 +7,7 @@ public class Plat {
 	private float prix;
 	private String description;
 	private Categorie categorie;
+	private String nomCategorie;
 	
 	public Plat(int id, String nom, float prix, String description, Categorie categorie) {
 		this.id = id;
@@ -65,5 +66,25 @@ public class Plat {
 	public void setCategorie(Categorie categorie) {
 		this.categorie = categorie;
 	}
+
+	public String getNomCategorie() {
+		return nomCategorie;
+	}
+
+	public void setNomCategorie(String nomCategorie) {
+		this.nomCategorie = nomCategorie;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("| %-4d | %-20s | %-20s | %-100s | %-20s |",
+				id,
+				nom,
+				prix,
+				description, 
+				nomCategorie); 
+	}
+	
+	
 }
 
