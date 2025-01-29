@@ -1,25 +1,24 @@
 package bo;
 
 public class Plat {
-
     private int id;
     private String nom;
-    private String description;
     private float prix;
+    private String description;
     private Categorie categorie;
 
-    public Plat(int id, String nom, String description, float prix, Categorie categorie) {
+    public Plat(int id, String nom, float prix, String description, Categorie categorie) {
         this.id = id;
         this.nom = nom;
-        this.description = description;
         this.prix = prix;
+        this.description = description;
         this.categorie = categorie;
     }
 
-    public Plat(String nom, String description, float prix, Categorie categorie) {
+    public Plat(String nom, float prix, String description, Categorie categorie) {
         this.nom = nom;
-        this.description = description;
         this.prix = prix;
+        this.description = description;
         this.categorie = categorie;
     }
 
@@ -42,20 +41,20 @@ public class Plat {
         this.nom = nom;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public float getPrix() {
         return prix;
     }
 
     public void setPrix(float prix) {
         this.prix = prix;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Categorie getCategorie() {

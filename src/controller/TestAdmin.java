@@ -4,11 +4,15 @@ package controller;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import bll.CategorieBLL;
+import bll.PlatBLL;
 import bll.RestaurantBLL;
 import bo.Carte;
 import bo.Categorie;
 import bo.Plat;
 import bo.Restaurant;
+import dal.PlatDAO;
+import exceptions.PlatException;
 import exceptions.RestaurantException;
 
 import bll.CarteBLL;
@@ -133,16 +137,29 @@ public class TestAdmin {
 				System.out.format(" %-7s %s\n", "2.", "Non\n");
 				try{
 					choix = scan.nextInt();
-					Plat plat = saisiePlat();
-					carte.ajouterPlat(plat);
-					associerCartePlatDansBDD();
+					if (choix == 2){
+						continue;
+					}
 				} catch (InputMismatchException e) {
 					System.err.println("Choix invalide.");
 					choix = -1;
 				} finally {
 					scan.nextLine();
 				}
+
+				Plat plat = saisiePlat();
+				carte.ajouterPlat(plat);
+				try {
+					PlatBLL platBLL = new PlatBLL();
+					platBLL.insert(plat);
+					platBLL.associerPlatCarte(plat, carte);
+				} catch (PlatException e){
+					System.err.println("Erreur lors de la création du plat : " + e.getMessage());
+				}
+				System.out.println("Plat ajouté avec succès.");
+
 			}while(choix != 2);
+			System.out.println("les plats ont tous bien été ajoutés");
 		} catch (CarteException e) {
 			System.out.println("Erreur lors de la création de la carte : " + e.getMessage());
 		}
@@ -153,7 +170,7 @@ public class TestAdmin {
 		String nom;
 		String description;
 		float prix;
-		String categorie;
+		int choix;
 
 		System.out.println("Nom du plat à ajouter : ");
 		nom = scan.nextLine();
@@ -168,10 +185,36 @@ public class TestAdmin {
 		scan.nextLine();
 		plat.setPrix(prix);
 
-		System.out.println("Catégorie du plat à ajouter : ");
-		categorie = scan.nextLine();
-		//faire un check sur la validité de la catégorie
-		plat.setCategorie(new Categorie(categorie));
+		do {
+			System.out.println("Catégorie du plat à ajouter : ");
+			System.out.format(" %-7s %s\n", "1.", "Entrée\n");
+			System.out.format(" %-7s %s\n", "2.", "Plat\n");
+			System.out.format(" %-7s %s\n", "3.", "Dessert\n");
+			System.out.format(" %-7s %s\n", "4.", "Boisson\n");
+			try {
+				choix = scan.nextInt();
+			} catch (InputMismatchException e) {
+				System.err.println("Choix invalide.");
+				choix = -1;
+			} finally {
+				scan.nextLine();
+			}
+		} while (choix < 1 || choix > 4);
+
+		switch (choix) {
+			case 1:
+				plat.setCategorie(new Categorie(1, "Entrée"));
+				break;
+			case 2:
+				plat.setCategorie(new Categorie(2, "Plat"));
+				break;
+			case 3:
+				plat.setCategorie(new Categorie(3, "Dessert"));
+				break;
+			case 4:
+				plat.setCategorie(new Categorie(4, "Boisson"));
+				break;
+		}
 
 		return plat;
 	}
