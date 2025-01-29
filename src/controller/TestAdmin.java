@@ -1,10 +1,22 @@
 package controller;
 
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import bll.RestaurantBLL;
+import bo.Restaurant;
+import exceptions.RestaurantException;
+
+import bll.CarteBLL;
+import exceptions.CarteException;
+
+
+
 public class TestAdmin {
 	private static Scanner scan;
+
+	private static RestaurantBLL restaurantBLL = new RestaurantBLL();
 
 	public static void main(String[] args) {
 		scan = new Scanner(System.in);
@@ -15,15 +27,17 @@ public class TestAdmin {
 			choix = afficherMenu();
 			
 			switch(choix) {
-			case 1:
+			case 1: 
+				ajouterRestaurant();
 				break;
 			case 2:
 				break;
 			case 3:
 				break;
 			case 4:
+        sousMenuCreationCarte();
 				break;
-			case 5:
+			case 5: 
 				break;
 			}
 		} while (choix != 6);
@@ -50,9 +64,67 @@ public class TestAdmin {
 	        } catch (InputMismatchException e) {
 	        	System.err.println("Choix invalide.");
 	        	choix = -1;
-	        }
+	        } finally {
+				scan.nextLine();
+			}
 		} while (choix < 1 || choix > 6);
 		return choix;
 	}
+	
+	 public static void ajouterRestaurant() {
+	        try {
+	            System.out.println("Pour créer un nouveau restaurant, saisissez les informations suivantes : ");
+	            System.out.println("Pour retourner au menu à tout moment, saissisez 'Menu'");
+	            
+	            System.out.println("Nom du restaurant : ");
+	            String nom = scan.nextLine();
+	            if (nom.equalsIgnoreCase("Menu")) {
+	            	System.out.println("Retour au menu principal... Entrée pour continuer.");
+	            	return;
+	            }
+	            
+	            System.out.println("Adresse du restaurant : ");
+	            String adresse = scan.nextLine();
+	            if (adresse.equalsIgnoreCase("Menu")) {
+	            	System.out.println("Retour au menu principal... Entrée pour continuer.");
+	            	return;
+	            }
+	            
+	            System.out.println("Ajouter une image du restaurant (URL) ou passez avec Entrée : ");
+	            String url_image = scan.nextLine();
+	            if (url_image.equalsIgnoreCase("Menu")) {
+	            	System.out.println("Retour au menu principal... Entrée pour continuer.");
+	            	return;
+	            }
+	            
+	            Restaurant restaurant = restaurantBLL.insert(nom, adresse, url_image);
+		          System.out.println("Ajout du restaurant réussi !");
+				      System.out.println(restaurant);
+				      System.out.println("Entrée pour retourner au menu principal.");
 
+	        } catch (RestaurantException e) {
+				      System.err.println("La création du restaurant à échoué :");
+				      System.err.println(e.getMessage());
+	          } finally {
+				  scan.nextLine();
+			    }
+	    }
+  
+	private static void sousMenuCreationCarte(){
+		String nom;
+		String description;
+
+		System.out.println("Nom de la carte :");
+		nom = scan.nextLine();
+		System.out.println("Description de la carte :");
+		description = scan.nextLine();
+
+		CarteBLL bll = new CarteBLL();
+		try{
+			bll.insert(nom, description);
+			System.out.println("Carte créée avec succès !");
+		} catch (CarteException e){
+			System.out.println("Erreur lors de la création de la carte : " + e.getMessage());
+		}
+	}
 }

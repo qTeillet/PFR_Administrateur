@@ -17,7 +17,7 @@ public class PlatDAO {
     private static String username = System.getenv("FIL_ROUGE_USERNAME");
     private static String password = System.getenv("FIL_ROUGE_PASSWORD");
 	
-	public List<Plat> select() {
+	public List<Plat> select(int idCarte) {
         
 		List<Plat> plats = new ArrayList<>();
         
@@ -33,7 +33,13 @@ public class PlatDAO {
             
             if(!cnx.isClosed()){
 
-                PreparedStatement ps = cnx.prepareStatement("SELECT * FROM plats");
+                PreparedStatement ps = cnx.prepareStatement("SELECT p.id, p.nom, p.prix, p.description, c.libelle AS categorie_libelle " +
+                        "FROM plats p " +
+                        "INNER JOIN categories c ON p.id_categorie = c.id " +
+                        "INNER JOIN asso_cartes_plats acp ON p.id = acp.id_plat " +
+                        "INNER JOIN cartes ca ON acp.id_carte = ca.id " +
+                        "WHERE ca.id = ?");
+                ps.setInt(1, idCarte);
                 ResultSet rs = ps.executeQuery();
                 if(rs.next()){
                     plats.add(convertResultSetToPlat(rs));
