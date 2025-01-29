@@ -20,7 +20,6 @@ public class CarteBLL {
         CarteDAO dao = new CarteDAO();
         dao.insert(carte);
         return carte;
-
     }
 
     public void checkCarte(Carte carte) throws CarteException {
