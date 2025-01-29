@@ -126,4 +126,5 @@ public class TestAdmin {
 		} catch (CarteException e){
 			System.out.println("Erreur lors de la création de la carte : " + e.getMessage());
 		}
+	}
 }
