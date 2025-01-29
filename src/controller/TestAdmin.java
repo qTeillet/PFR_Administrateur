@@ -165,6 +165,7 @@ public class TestAdmin {
 		}
 	}
 
+
 	private static Plat saisiePlat(){
 		Plat plat = new Plat();
 		String nom;
@@ -219,3 +220,4 @@ public class TestAdmin {
 		return plat;
 	}
 }
+

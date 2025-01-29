@@ -35,10 +35,10 @@ public class Categorie {
 		this.libelle = libelle;
 	}
 
-	@Override
-	public String toString() {
-		return String.format(" %-4d | %-20s \n",
-				id,
-				libelle);
-	}
+
+    @Override
+    public String toString() {
+        return libelle;
+    }
+
 }

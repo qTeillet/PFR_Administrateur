@@ -12,12 +12,14 @@ import bo.Categorie;
 
 public class CategorieDAO {
 
-    public List<Categorie> select() {
-        List<Categorie> categories = new ArrayList<>();
-        String url = System.getenv("FIL_ROUGE_URL");
-        String username = System.getenv("FIL_ROUGE_USERNAME");
-        String password = System.getenv("FIL_ROUGE_PASSWORD");
-        try {
+	String url = System.getenv("FIL_ROUGE_URL");
+    String username = System.getenv("FIL_ROUGE_USERNAME");
+    String password = System.getenv("FIL_ROUGE_PASSWORD");
+	
+	public List<Categorie> select() {
+		List<Categorie> categories = new ArrayList<>();
+		
+		 try {
 
             Connection cnx = DriverManager.getConnection("jdbc:sqlserver://"
                     + url
@@ -26,11 +28,13 @@ public class CategorieDAO {
                     + ";password="
                     + password
                     + ";trustservercertificate=true");
-            if (!cnx.isClosed()) {
+
+            
+            if(!cnx.isClosed()){
 
                 PreparedStatement ps = cnx.prepareStatement("SELECT * FROM categories");
                 ResultSet rs = ps.executeQuery();
-                if (rs.next()) {
+                while (rs.next()){
                     categories.add(convertResultSetToCategorie(rs));
                 }
 
@@ -44,11 +48,12 @@ public class CategorieDAO {
         return categories;
     }
 
-    private Categorie convertResultSetToCategorie(ResultSet rs) throws SQLException {
-        Categorie categorie = new Categorie();
-        categorie.setId(rs.getInt("id"));
-        categorie.setLibelle(rs.getString("libelle"));
-        return categorie;
-    }
-
+	
+	private Categorie convertResultSetToCategorie(ResultSet rs) throws SQLException {
+		Categorie categorie = new Categorie();
+		categorie.setId(rs.getInt("id"));
+		categorie.setLibelle(rs.getString("libelle"));
+		return categorie;
+	}
 }
+
