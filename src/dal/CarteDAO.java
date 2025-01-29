@@ -1,17 +1,45 @@
 package dal;
 
 import bo.Carte;
-import bo.Restaurant;
 
 import java.sql.*;
 
 public class CarteDAO {
 
+    String url = System.getenv("FIL_ROUGE_URL");
+    String username = System.getenv("FIL_ROUGE_USERNAME");
+    String password = System.getenv("FIL_ROUGE_PASSWORD");
+		
+	public Carte select(int id) {
+		Carte carte = null;
+		try {
+			Connection cnx = DriverManager.getConnection("jdbc:sqlserver://"
+					+ url
+					+";databasename=PFR;username="
+					+ username
+					+ ";password="
+					+ password
+					+ ";trustservercertificate=true");
+			
+			if(!cnx.isClosed()) {
+				
+				PreparedStatement ps = cnx.prepareStatement("SELECT * FROM cartes WHERE id = ?");
+				ps.setInt(1, id);
+				ResultSet rs = ps.executeQuery();
+				
+				while (rs.next()) {
+					carte = convertResultSetToCarte(rs);
+				}
+			}
+			cnx.close();
+		} catch (SQLException e) {
+			e.printStackTrace();		
+		}
+		
+		return carte;
+	}
+	
         public void insert(Carte carte){
-
-        String url = System.getenv("FIL_ROUGE_URL");
-        String username = System.getenv("FIL_ROUGE_USERNAME");
-        String password = System.getenv("FIL_ROUGE_PASSWORD");
 
         try {
 
@@ -48,4 +76,12 @@ public class CarteDAO {
 
     }
 
+        private Carte convertResultSetToCarte(ResultSet rs) throws SQLException {
+    		Carte carte = new Carte();
+    		carte.setId(rs.getInt("id"));
+    		carte.setNom(rs.getString("nom"));
+    		carte.setDescription(rs.getString("description"));
+    		
+    		return carte;
+    	}
 }
