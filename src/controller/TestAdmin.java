@@ -20,7 +20,6 @@ import bll.CarteBLL;
 import exceptions.CarteException;
 
 
-
 public class TestAdmin {
 	private static Scanner scan;
 
@@ -243,6 +242,7 @@ public class TestAdmin {
 			afficherRestaurants();
 			System.out.println("Quel restaurant souhaitez-vous modifier ? Saisissez son numéro : ");
 			int id = scan.nextInt();
+			
 			Restaurant restaurant = restaurantBLL.select(id);
 			scan.nextLine();
 			
@@ -444,7 +444,7 @@ public class TestAdmin {
 	        }
 	    }
 	}
-}
+
 
 	private static boolean estMenu(String input) {
 		if (input.equalsIgnoreCase("Menu")) {

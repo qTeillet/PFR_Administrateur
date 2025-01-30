@@ -41,8 +41,6 @@ public class CarteDAO {
 			return cartes;
 		}
 
-		public void insert(Carte carte){
-
 	public Carte select(int id) {
 		Carte carte = null;
 		try {
@@ -56,7 +54,10 @@ public class CarteDAO {
 			
 			if(!cnx.isClosed()) {
 				
-				PreparedStatement ps = cnx.prepareStatement("SELECT * FROM cartes WHERE id = ?");
+				PreparedStatement ps = cnx.prepareStatement("SELECT ca.id, ca.nom, ca.description, r.nom AS nom_restaurant"
+						+ "	FROM cartes ca\r\n"
+						+ "	LEFT JOIN restaurants r ON ca.id = r.id_carte"
+						+  "WHERE c.id = ?");
 				ps.setInt(1, id);
 				ResultSet rs = ps.executeQuery();
 				
@@ -110,12 +111,16 @@ public class CarteDAO {
 
         private Carte convertResultSetToCarte(ResultSet rs) throws SQLException {
     		Carte carte = new Carte();
+    		
     		carte.setId(rs.getInt("id"));
     		carte.setNom(rs.getString("nom"));
+    		
     		if (rs.getString("description") != null)
     			carte.setDescription(rs.getString("description"));
-    		if (rs.getString("nom_restaurant") != null)
-    			carte.setNomRestaurant(rs.getString("nom_restaurant"));
+    		
+    		if (rs.getString("nom_restaurant") != null) {
+    	        carte.setNomRestaurant(rs.getString("nom_restaurant"));
+    	    }
     		return carte;
 		}
 }
