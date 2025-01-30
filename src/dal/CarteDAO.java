@@ -117,10 +117,9 @@ public class CarteDAO {
     		
     		if (rs.getString("description") != null)
     			carte.setDescription(rs.getString("description"));
-    		
-    		if (rs.getString("nom_restaurant") != null) {
-    	        carte.setNomRestaurant(rs.getString("nom_restaurant"));
-    	    }
+    		if (rs.getString("nom_restaurant") != null) 
+    			carte.setNomRestaurant(rs.getString("nom_restaurant"));
+    	    
     		return carte;
 		}
 }
