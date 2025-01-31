@@ -34,7 +34,9 @@ public class RestaurantDAO {
 			
 			if(!cnx.isClosed()) {
 				
-				PreparedStatement ps = cnx.prepareStatement("SELECT * FROM restaurants");
+				PreparedStatement ps = cnx.prepareStatement("SELECT r.id, r.nom, r.adresse, r.url_image, r.id_carte, ca.nom AS carte_nom, ca.description AS carte_description"
+	                     + " FROM restaurants r"
+	                     + " LEFT JOIN cartes ca ON r.id_carte = ca.id;");
 				ResultSet rs = ps.executeQuery(); 
 				
 				while (rs.next()) {
@@ -62,7 +64,10 @@ public class RestaurantDAO {
 			
 			if(!cnx.isClosed()) {
 				
-				PreparedStatement ps = cnx.prepareStatement("SELECT * FROM restaurants WHERE id = ?");
+				PreparedStatement ps = cnx.prepareStatement("SELECT r.id, r.nom, r.adresse, r.url_image, r.id_carte, ca.nom AS carte_nom, ca.description AS carte_description"
+	                     + " FROM restaurants r"
+	                     + " LEFT JOIN cartes ca ON r.id_carte = ca.id"
+	                     + " WHERE r.id = ?");
 				ps.setInt(1, id);
 				ResultSet rs = ps.executeQuery();
 				
@@ -132,7 +137,7 @@ public class RestaurantDAO {
 				ps.setString(3, restaurant.getUrl_image());
 				
 				if (restaurant.getCarte() != null) {
-					ps.setInt(4 ,restaurant.getCarte().getId());
+					ps.setInt(4, restaurant.getCarte().getId());
 				} else {
 					ps.setNull(4, java.sql.Types.INTEGER);
 				}
@@ -149,14 +154,16 @@ public class RestaurantDAO {
 	
 	private Restaurant convertResultSetToRestaurant(ResultSet rs) throws SQLException {
 		Restaurant restaurant = new Restaurant();
-		CarteBLL carteBLL = new CarteBLL();
-		
 		restaurant.setId(rs.getInt("id"));
 		restaurant.setNom(rs.getString("nom"));
 		restaurant.setAdresse(rs.getString("adresse"));
 		restaurant.setUrl_image(rs.getString("url_image"));
-
-		Carte carte = carteBLL.select(rs.getInt("id_carte"));
+		
+		Carte carte = new Carte();
+		carte.setId(rs.getInt("id_carte"));
+		carte.setNom(rs.getString("carte_nom"));
+		carte.setDescription(rs.getString("carte_description"));
+		
 		restaurant.setCarte(carte);
 	   
 		return restaurant;

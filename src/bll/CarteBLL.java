@@ -7,13 +7,13 @@ import dal.CarteDAO;
 import exceptions.CarteException;
 
 public class CarteBLL {
+	private CarteDAO dao = new CarteDAO();
+	
 	
 	public Carte select(int id) {
 		CarteDAO dao = new CarteDAO();
 		return dao.select(id);	
 	}
-
-	private CarteDAO dao = new CarteDAO();
 	
 	public List<Carte> select() {
 		return dao.select();

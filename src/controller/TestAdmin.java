@@ -20,7 +20,6 @@ import bll.CarteBLL;
 import exceptions.CarteException;
 
 
-
 public class TestAdmin {
 	private static Scanner scan;
 
@@ -50,106 +49,15 @@ public class TestAdmin {
 			case 4:
 				sousMenuCreationCarte();
 				break;
-			case 5: sousMenuModificationCarte(); 
+			case 5: 
+				sousMenuModificationCarte(); 
 				break;
 			}
 		} while (choix != 6);
 		System.out.println("À bientot !");
 		scan.close();
 	}
-
-	private static int sousMenuModificationCarte() {
-		List<Carte> cartes = carteBLL.select();
-		int choixCarte = -1;
-		int choixMenuPlat;
-		
-		if (cartes.isEmpty()) {
-			System.err.println("Aucun élément à afficher.");
-			return -1;
-		}
-		
-		
-		
-		do {
-			System.out.println("\nListe des cartes :\n");
-			for (Carte current : cartes) {
-				System.out.println(current);
-			}
-			System.out.println("Quelle carte souhaitez-vous modifier ?");
-			
-	        if (scan.hasNextInt()) {
-	            choixCarte = scan.nextInt(); 
-	            scan.nextLine();
-	            
-	            boolean carteExiste = false;
-	            // Vérification si l'ID existe dans la liste des cartes
-	            for (Carte carte : cartes) {
-	                if (carte.getId() == choixCarte) {
-	                    carteExiste = true;
-	                    break;
-	                }
-	            }
-	            
-	            if (carteExiste) {
-	                afficherPlatsCarte(choixCarte);
-	                do {
-	                	choixMenuPlat = afficherMenuPlat();
-	                	
-	                	switch(choixMenuPlat) {
-	                	case 1 : afficherMenuPlatAjout(); break;
-	                	case 2 : afficherMenuPlatModifier(); break;
-	                	case 3 : afficherMenuPlatSuppression(); break;
-	                	}
-	                } while (choixMenuPlat != 4);
-	            } else {
-	                System.err.println("ID de carte invalide.");
-	            }
-	        } else {
-	            System.err.println("Choix invalide. Veuillez entrer un nombre.");
-	            scan.next();
-	        } 
-	    } while (choixCarte == -1);
-	    
-	    return choixCarte;  
-	}
-
-	private static void afficherMenuPlatSuppression() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private static void afficherMenuPlatModifier() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private static void afficherMenuPlatAjout() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private static int afficherMenuPlat() {
-		int choix;
-		do {
-			System.out.println();
-			System.out.println("Quelle action souhaitez-vous réaliser ?");
-			System.out.println("\t1. Ajouter un nouveau plat à la carte.");
-			System.out.println("\t2. Modifier un plat de la carte.");
-			System.out.println("\t3. Supprimer un plat de la carte.");
-			System.out.println("\t4. Retourner au menu principal");
-			
-			try {
-				choix = scan.nextInt();
-			} catch (InputMismatchException e) {
-				System.err.println("Choix invalide.");
-				choix = -1;
-			} finally {
-				scan.nextLine();
-			}
-		} while (choix < 1 || choix > 4);
-		return choix;
-	}
-
+	
 	private static int afficherMenu() {
 		int choix;
 		do {
@@ -176,6 +84,7 @@ public class TestAdmin {
 		return choix;
 	}
 	
+	// CASE 1
 	public static void ajouterRestaurant() {
 		 try {
 			System.out.println("Pour créer un nouveau restaurant, saisissez les informations suivantes : ");
@@ -238,11 +147,13 @@ public class TestAdmin {
 		}
 	}
 	
+	// CASE 2
 	public static void modifierRestaurant()  {
 		try {
 			afficherRestaurants();
 			System.out.println("Quel restaurant souhaitez-vous modifier ? Saisissez son numéro : ");
 			int id = scan.nextInt();
+			
 			Restaurant restaurant = restaurantBLL.select(id);
 			scan.nextLine();
 			
@@ -322,14 +233,15 @@ public class TestAdmin {
 			}
 	}
 	
-    public static void afficherRestaurants() {
+	public static void afficherRestaurants() {
     	List<Restaurant> restaurants = restaurantBLL.select();
     	System.out.println("Liste des restaurants :");
     	for (Restaurant current : restaurants) {
     		System.out.println(current);
     	}
     }
-  
+	
+	// CASE  4
 	private static void sousMenuCreationCarte() {
 		String nom;
 		String description;
@@ -377,7 +289,7 @@ public class TestAdmin {
 			System.out.println("Erreur lors de la création de la carte : " + e.getMessage());
 		}
 	}
-
+	
 	private static Plat saisiePlat(){
 		Plat plat = new Plat();
 		String nom;
@@ -432,6 +344,62 @@ public class TestAdmin {
 		return plat;
 	}
 	
+	// CASE 5
+	private static int sousMenuModificationCarte() {
+		List<Carte> cartes = carteBLL.select();
+		int choixCarte = -1;
+		int choixMenuPlat;
+		
+		if (cartes.isEmpty()) {
+			System.err.println("Aucun élément à afficher.");
+			return -1;
+		}
+		
+		
+		
+		do {
+			System.out.println("\nListe des cartes :\n");
+			for (Carte current : cartes) {
+				System.out.println(current);
+			}
+			System.out.println("Quelle carte souhaitez-vous modifier ?");
+			
+	        if (scan.hasNextInt()) {
+	            choixCarte = scan.nextInt(); 
+	            scan.nextLine();
+	            
+	            boolean carteExiste = false;
+	            // Vérification si l'ID existe dans la liste des cartes
+	            for (Carte carte : cartes) {
+	                if (carte.getId() == choixCarte) {
+	                    carteExiste = true;
+	                    break;
+	                }
+	            }
+	            
+	            if (carteExiste) {
+	                afficherPlatsCarte(choixCarte);
+	                do {
+	                	choixMenuPlat = afficherMenuPlat();
+	                	
+	                	switch(choixMenuPlat) {
+	                	case 1 : afficherMenuPlatAjout(); break;
+	                	case 2 : afficherMenuPlatModifier(); break;
+	                	case 3 : afficherMenuPlatSuppression(); break;
+	                	}
+	                } while (choixMenuPlat != 4);
+	            } else {
+	                System.err.println("ID de carte invalide.");
+	            }
+	        } else {
+	            System.err.println("Choix invalide. Veuillez entrer un nombre.");
+	            scan.next();
+	        } 
+	    } while (choixCarte == -1);
+	    
+	    return choixCarte;  
+	}
+	
 	private static void afficherPlatsCarte(int idCarte) {
 	    List<Plat> plats = platBLL.select(idCarte); // Récupère les plats associés à la carte sélectionnée
 
@@ -444,8 +412,46 @@ public class TestAdmin {
 	        }
 	    }
 	}
-}
+	
+	private static int afficherMenuPlat() {
+		int choix;
+		do {
+			System.out.println();
+			System.out.println("Quelle action souhaitez-vous réaliser ?");
+			System.out.println("\t1. Ajouter un nouveau plat à la carte.");
+			System.out.println("\t2. Modifier un plat de la carte.");
+			System.out.println("\t3. Supprimer un plat de la carte.");
+			System.out.println("\t4. Retourner au menu principal");
+			
+			try {
+				choix = scan.nextInt();
+			} catch (InputMismatchException e) {
+				System.err.println("Choix invalide.");
+				choix = -1;
+			} finally {
+				scan.nextLine();
+			}
+		} while (choix < 1 || choix > 4);
+		return choix;
+	}
+	
+	private static void afficherMenuPlatAjout() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private static void afficherMenuPlatModifier() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private static void afficherMenuPlatSuppression() {
+		// TODO Auto-generated method stub
+		
+	}
 
+	
+	// GENERAL
 	private static boolean estMenu(String input) {
 		if (input.equalsIgnoreCase("Menu")) {
 	        System.out.println("Retour au menu principal... Entrée pour continuer.");

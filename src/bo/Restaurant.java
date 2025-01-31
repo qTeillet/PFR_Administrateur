@@ -96,11 +96,12 @@ public class Restaurant {
 
 	@Override
 	public String toString() {
-		return  String.format("| %2d | %-10s | %-20s | %-20s\n",
+		return  String.format("|%2d | %-20s | %-35s | %-1d: %-20s |",
 						id,
 						nom,
 						adresse,
-						url_image);	
+						carte.getId(),
+						carte.getNom());	
 	}
 	
 }
