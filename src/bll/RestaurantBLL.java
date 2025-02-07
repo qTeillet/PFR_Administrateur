@@ -72,4 +72,8 @@ public class RestaurantBLL {
 			throw new RestaurantException("L'URL de l'image doit faire au maximum 255 caractères. Entrée pour continuer");
 		}
 	}
+	
+	public void delete(int id) {
+		dao.delete(id);
+	}
 }

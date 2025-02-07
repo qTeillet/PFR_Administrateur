@@ -45,6 +45,7 @@ public class TestAdmin {
 				modifierRestaurant();
 				break;
 			case 3:
+				supprimerRestaurant();
 				break;
 			case 4:
 				sousMenuCreationCarte();
@@ -57,7 +58,7 @@ public class TestAdmin {
 		System.out.println("À bientot !");
 		scan.close();
 	}
-	
+
 	private static int afficherMenu() {
 		int choix;
 		do {
@@ -240,6 +241,42 @@ public class TestAdmin {
     		System.out.println(current);
     	}
     }
+	
+	private static void supprimerRestaurant() {
+		afficherRestaurants();
+		System.out.println("Quel restaurant souhaitez-vous supprimer ? Saisissez son numéro : ");
+		int id = scan.nextInt();
+		
+		Restaurant restaurant = restaurantBLL.select(id);
+		scan.nextLine();	
+		
+
+		
+		if(restaurant != null) {
+			System.err.println("Confirmez-vous la suppression de ce restaurant? oui/non");
+			String choix = scan.nextLine();
+			
+			switch (choix.toLowerCase()) {
+            	case "oui":
+            		restaurantBLL.delete(id);
+            		System.out.println("Restaurant supprimé !");
+            		System.out.println("Mise à jour de la liste des restaurants...");
+            		afficherRestaurants();
+            		break;
+
+            	case "non":
+            		System.out.println("Retour au menu principal... Entrée pour continuer.");
+            		scan.nextLine();
+            		break;
+
+            	default:
+            		System.out.println("Choix invalide, retour au menu principal.");
+
+			}
+		} else {
+			System.err.println("Il n'y a pas de restaurant enregistré avec cet identifiant.");
+		}
+	}
 	
 	// CASE  4
 	private static void sousMenuCreationCarte() {

@@ -30,12 +30,6 @@ public class Restaurant {
 		this.carte = carte;
 	}
 	
-	public Restaurant(String nom, String adresse, String url_image) {
-		this.nom = nom;
-		this.adresse = adresse;
-		this.url_image = url_image;
-	}
-	
 	public Restaurant() {}
 
 	public int getId() {
