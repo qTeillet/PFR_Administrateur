@@ -17,7 +17,7 @@ public class RestaurantDAO {
 	private static final String SELECT_BY_ID = "SELECT r.id, r.nom, r.adresse, r.url_image, r.id_carte, ca.nom AS carte_nom, ca.description AS carte_description FROM restaurants r LEFT JOIN cartes ca ON r.id_carte = ca.id WHERE r.id = ?";
 	private static final String INSERT = "INSERT INTO restaurants (nom, adresse, url_image, id_carte) VALUES (?, ?, ?, ?)";
 	private static final String UPDATE = "UPDATE restaurants SET nom = ?, adresse = ?, url_image = ?, id_carte = ? WHERE id = ?";
-	private static final String DELETE = "DELETE FROM restaurants WHERE id=?";
+	private static final String DELETE = "DELETE FROM restaurants WHERE id = ?";
 	
 	private String url = System.getenv("FIL_ROUGE_URL");
 	private String username = System.getenv("FIL_ROUGE_USERNAME");
