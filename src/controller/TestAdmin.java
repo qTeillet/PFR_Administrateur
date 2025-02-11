@@ -242,6 +242,7 @@ public class TestAdmin {
     	}
     }
 	
+	// CASE 3
 	private static void supprimerRestaurant() {
 		afficherRestaurants();
 		System.out.println("Quel restaurant souhaitez-vous supprimer ? Saisissez son numéro : ");
