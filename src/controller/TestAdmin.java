@@ -380,10 +380,10 @@ public class TestAdmin {
 	            if (carteExiste) {
 	                afficherPlatsCarte(choixCarte);
 	                do {
-	                	choixMenuPlat = afficherMenuPlat();
+	                	choixMenuPlat = afficherMenuPlat(choixCarte);
 	                	
 	                	switch(choixMenuPlat) {
-	                	case 1 : afficherMenuPlatAjout(); break;
+	                	case 1 : afficherMenuPlatAjout(choixCarte); break;
 	                	case 2 : afficherMenuPlatModifier(); break;
 	                	case 3 : afficherMenuPlatSuppression(); break;
 	                	}
@@ -413,7 +413,7 @@ public class TestAdmin {
 	    }
 	}
 	
-	private static int afficherMenuPlat() {
+	private static int afficherMenuPlat(int choixCarte) {
 		int choix;
 		do {
 			System.out.println();
@@ -435,8 +435,19 @@ public class TestAdmin {
 		return choix;
 	}
 	
-	private static void afficherMenuPlatAjout() {
-		// TODO Auto-generated method stub
+	private static void afficherMenuPlatAjout(int choixCarte) {
+		Plat platAAjouter = saisiePlat();
+		CarteBLL carteBLL = new CarteBLL();
+		Carte carte = carteBLL.select(choixCarte);
+		carte.ajouterPlat(platAAjouter);
+		try {
+			PlatBLL platBLL = new PlatBLL();
+			platBLL.insert(platAAjouter);
+			platBLL.associerPlatCarte(platAAjouter, carte);
+		} catch (PlatException | CarteException e){
+			System.err.println("Erreur lors de la création du plat : " + e.getMessage());
+		}
+		System.out.println("Plat ajouté avec succès.");
 		
 	}
 	

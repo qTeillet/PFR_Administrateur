@@ -56,8 +56,8 @@ public class CarteDAO {
 				
 				PreparedStatement ps = cnx.prepareStatement("SELECT ca.id, ca.nom, ca.description, r.nom AS nom_restaurant"
 						+ "	FROM cartes ca\r\n"
-						+ "	LEFT JOIN restaurants r ON ca.id = r.id_carte"
-						+  "WHERE c.id = ?");
+						+ "	LEFT JOIN restaurants r ON ca.id = r.id_carte "
+						+  "WHERE ca.id = ?");
 				ps.setInt(1, id);
 				ResultSet rs = ps.executeQuery();
 				
