@@ -8,16 +8,20 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import bll.CarteBLL;
 import bo.Carte;
 import bo.Restaurant;
 
 
 public class RestaurantDAO {
+	private static final String SELECT = "SELECT r.id, r.nom, r.adresse, r.url_image, r.id_carte, ca.nom AS carte_nom, ca.description AS carte_description FROM restaurants r LEFT JOIN cartes ca ON r.id_carte = ca.id";
+	private static final String SELECT_BY_ID = "SELECT r.id, r.nom, r.adresse, r.url_image, r.id_carte, ca.nom AS carte_nom, ca.description AS carte_description FROM restaurants r LEFT JOIN cartes ca ON r.id_carte = ca.id WHERE r.id = ?";
+	private static final String INSERT = "INSERT INTO restaurants (nom, adresse, url_image, id_carte) VALUES (?, ?, ?, ?)";
+	private static final String UPDATE = "UPDATE restaurants SET nom = ?, adresse = ?, url_image = ?, id_carte = ? WHERE id = ?";
+	private static final String DELETE = "DELETE FROM restaurants WHERE id = ?";
 	
-	String url = System.getenv("FIL_ROUGE_URL");
-	String username = System.getenv("FIL_ROUGE_USERNAME");
-	String password = System.getenv("FIL_ROUGE_PASSWORD");
+	private String url = System.getenv("FIL_ROUGE_URL");
+	private String username = System.getenv("FIL_ROUGE_USERNAME");
+	private String password = System.getenv("FIL_ROUGE_PASSWORD");
 	
 	
 	public List<Restaurant> select() {
@@ -34,9 +38,7 @@ public class RestaurantDAO {
 			
 			if(!cnx.isClosed()) {
 				
-				PreparedStatement ps = cnx.prepareStatement("SELECT r.id, r.nom, r.adresse, r.url_image, r.id_carte, ca.nom AS carte_nom, ca.description AS carte_description"
-	                     + " FROM restaurants r"
-	                     + " LEFT JOIN cartes ca ON r.id_carte = ca.id;");
+				PreparedStatement ps = cnx.prepareStatement(SELECT);
 				ResultSet rs = ps.executeQuery(); 
 				
 				while (rs.next()) {
@@ -64,10 +66,7 @@ public class RestaurantDAO {
 			
 			if(!cnx.isClosed()) {
 				
-				PreparedStatement ps = cnx.prepareStatement("SELECT r.id, r.nom, r.adresse, r.url_image, r.id_carte, ca.nom AS carte_nom, ca.description AS carte_description"
-	                     + " FROM restaurants r"
-	                     + " LEFT JOIN cartes ca ON r.id_carte = ca.id"
-	                     + " WHERE r.id = ?");
+				PreparedStatement ps = cnx.prepareStatement(SELECT_BY_ID);
 				ps.setInt(1, id);
 				ResultSet rs = ps.executeQuery();
 				
@@ -94,8 +93,7 @@ public class RestaurantDAO {
 					+ ";trustservercertificate=true");
 			
 			if(!cnx.isClosed()) {
-				PreparedStatement ps = cnx.prepareStatement(
-						"INSERT INTO restaurants (nom, adresse, url_image, id_carte) VALUES (?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+				PreparedStatement ps = cnx.prepareStatement( INSERT, PreparedStatement.RETURN_GENERATED_KEYS);
 				ps.setString(1, restaurant.getNom());
 				ps.setString(2, restaurant.getAdresse());
 				ps.setString(3, restaurant.getUrl_image());
@@ -130,8 +128,7 @@ public class RestaurantDAO {
 					+ ";trustservercertificate=true");
 			
 			if(!cnx.isClosed()) {
-				PreparedStatement ps = cnx.prepareStatement(
-						"UPDATE restaurants SET nom = ?, adresse = ?, url_image = ?, id_carte = ? WHERE id = ?");
+				PreparedStatement ps = cnx.prepareStatement(UPDATE);
 				ps.setString(1, restaurant.getNom());
 				ps.setString(2, restaurant.getAdresse());
 				ps.setString(3, restaurant.getUrl_image());
@@ -151,6 +148,26 @@ public class RestaurantDAO {
 		}
 	}
 	
+	public void delete(int id) {
+		try {
+			Connection cnx = DriverManager.getConnection("jdbc:sqlserver://"
+					+ url
+					+";databasename=PFR;username="
+					+ username
+					+ ";password="
+					+ password
+					+ ";trustservercertificate=true");
+			
+			if(!cnx.isClosed()) {
+				PreparedStatement ps = cnx.prepareStatement(DELETE);
+				ps.setInt(1, id);
+				ps.executeUpdate();
+			}
+			cnx.close();
+		} catch (SQLException e) {
+			e.printStackTrace();		
+		}
+	}
 	
 	private Restaurant convertResultSetToRestaurant(ResultSet rs) throws SQLException {
 		Restaurant restaurant = new Restaurant();
