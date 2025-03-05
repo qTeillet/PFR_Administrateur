@@ -182,6 +182,7 @@ public class RestaurantDAO {
 		carte.setDescription(rs.getString("carte_description"));
 		
 		restaurant.setCarte(carte);
+		restaurant.setHoraires(new ArrayList<>()); 
 	   
 		return restaurant;
 	}

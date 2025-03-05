@@ -43,7 +43,35 @@ public class HoraireDAO {
         return horaires;
     }
     
-    public void insert(Horaire horaire) {
+    public List<Horaire> selectHorairesByRestaurantId(int restaurantId) {
+        List<Horaire> horaires = new ArrayList<>();
+        
+        try {
+            Connection cnx = DriverManager.getConnection("jdbc:sqlserver://"
+                    + url
+                    + ";databasename=PFR;username="
+                    + username
+                    + ";password="
+                    + password
+                    + ";trustservercertificate=true");
+
+            if (!cnx.isClosed()) {
+                PreparedStatement ps = cnx.prepareStatement("SELECT * FROM horaires WHERE id_restaurant = ?");
+                ps.setInt(1, restaurantId); 
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    horaires.add(convertResultSetToHoraires(rs));
+                }
+            }
+            cnx.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return horaires;
+    }
+    
+    public void insert(Horaire horaire, int idRestaurant){
 		try {
 			Connection cnx = DriverManager.getConnection("jdbc:sqlserver://"
 					+ url
@@ -54,10 +82,11 @@ public class HoraireDAO {
 					+ ";trustservercertificate=true");
 			
 			if(!cnx.isClosed()) {
-				PreparedStatement ps = cnx.prepareStatement("INSERT INTO horaires (jour, ouverture, fermeture) VALUES (?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
-				ps.setString(1, horaire.getJour());
-				ps.setTime(2, Time.valueOf(horaire.getOuverture()));
-				ps.setTime(3, Time.valueOf(horaire.getFermeture()));
+				PreparedStatement ps = cnx.prepareStatement("INSERT INTO horaires (id_restaurant, jour, ouverture, fermeture) VALUES (?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+				ps.setInt(1, idRestaurant);
+				ps.setString(2, horaire.getJour());
+				ps.setTime(3, Time.valueOf(horaire.getOuverture()));
+				ps.setTime(4, Time.valueOf(horaire.getFermeture()));
 				
 				ps.executeUpdate();
 
@@ -87,6 +116,7 @@ public class HoraireDAO {
 				ps.setString(1, horaire.getJour());
 				ps.setTime(2, Time.valueOf(horaire.getOuverture()));
 				ps.setTime(3, Time.valueOf(horaire.getFermeture()));
+				ps.setInt(4, horaire.getId());
 				
 				ps.executeUpdate();
 			}

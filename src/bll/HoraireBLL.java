@@ -1,6 +1,5 @@
 package bll;
 
-import java.time.LocalTime;
 import java.util.List;
 
 import bo.Horaire;
@@ -15,24 +14,25 @@ public class HoraireBLL {
 		return dao.select();
 	}
 	
-	public Horaire insert(String jour, LocalTime ouverture, LocalTime fermeture) throws HoraireException {
-			Horaire horaire = new Horaire(jour, ouverture, fermeture);
-			checkHoraireInsert(horaire);
-			dao.insert(horaire);
+	public List<Horaire> selectHorairesByRestaurantId(int restaurantId) {
+		return dao.selectHorairesByRestaurantId(restaurantId);
+	}
+	
+	public Horaire insert(Horaire horaire, int idRestaurant) throws HoraireException {
+			checkHoraire(horaire);
+			dao.insert(horaire, idRestaurant);
 			return horaire; 
 	}
 	
 	public void update(Horaire horaire) throws HoraireException {
-		checkHoraireUpdate(horaire);
+		checkHoraire(horaire);
 		dao.update(horaire);
 	}
 
-	private void checkHoraireInsert(Horaire horaire) throws HoraireException {
-		// TO DO
-	}
-	
-	private void checkHoraireUpdate(Horaire horaire) throws HoraireException {
-		// TO DO	
+	private void checkHoraire(Horaire horaire) throws HoraireException {
+		if (horaire.getOuverture().isAfter(horaire.getFermeture())) {
+			throw new HoraireException("L'heure d'ouverture ne peut pas être après l'heure de fermeture.");
+		}
 	}
 	
 	public void delete(int id) {

@@ -57,8 +57,7 @@ public class Horaire {
 	
 	@Override
 	public String toString() {
-		return "Horaire : " + id + "\n\t• jour :" + jour + "\n\t• ouverture :" + ouverture + "\n\t• fermeture :"
-				+ fermeture;
+		return "Horaire : " + jour + " de " + ouverture + " à " + fermeture;
 	}
 	
 	
