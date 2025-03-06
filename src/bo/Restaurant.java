@@ -90,12 +90,42 @@ public class Restaurant {
 
 	@Override
 	public String toString() {
-		return  String.format("|%2d | %-20s | %-35s | %-1d: %-20s |",
-						id,
-						nom,
-						adresse,
-						carte.getId(),
-						carte.getNom());	
-	}
+		 String carteInfo;
+		    if (carte == null || carte.getId() == 0) {
+		        carteInfo = "Carte non associée";
+		    } else {
+		        carteInfo = carte.getNom() + " (n° " + carte.getId() + ")";
+		    }
+		
+		    StringBuilder horairesString = new StringBuilder();
+		    if (horaires != null && !horaires.isEmpty()) {
+		        horairesString.append("  Horaires :\n");
+		        for (Horaire horaire : horaires) {
+		            horairesString.append(String.format("    %-10s : %-10s - %-10s\n", 
+		                    horaire.getJour(), 
+		                    horaire.getOuverture().toString(), 
+		                    horaire.getFermeture().toString()));
+		        }
+		    } else {
+		        horairesString.append("    Aucun horaire disponible.\n");
+		    }
+		
+		    return String.format(
+		            "\n=====================================================================\n" +
+		            "| ID : %-3d  | %-52s |\n" +
+		            "---------------------------------------------------------------------\n" +
+		            "| %-64s |\n" +
+		            "---------------------------------------------------------------------\n" +
+		            "| Carte : %-56s |\n" +
+		            "---------------------------------------------------------------------\n" +
+		            "%s" +
+		            "=====================================================================\n",
+		            id,
+		            nom,
+		            adresse,
+		            carteInfo,
+		            horairesString.toString()
+		        );
+		    }
 	
 }

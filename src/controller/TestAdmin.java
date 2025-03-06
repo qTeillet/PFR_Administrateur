@@ -1,6 +1,8 @@
 package controller;
 
 
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -10,6 +12,7 @@ import bll.RestaurantBLL;
 import bo.Carte;
 
 import bo.Categorie;
+import bo.Horaire;
 import bo.Plat;
 
 import bo.Restaurant;
@@ -17,7 +20,9 @@ import exceptions.PlatException;
 import exceptions.RestaurantException;
 
 import bll.CarteBLL;
+import bll.HoraireBLL;
 import exceptions.CarteException;
+import exceptions.HoraireException;
 
 
 public class TestAdmin {
@@ -26,6 +31,7 @@ public class TestAdmin {
 	private static RestaurantBLL restaurantBLL = new RestaurantBLL();
 	private static CarteBLL carteBLL = new CarteBLL();
 	private static PlatBLL platBLL = new PlatBLL();
+	private static HoraireBLL horaireBLL = new HoraireBLL();
 
 
 	public static void main(String[] args)  {
@@ -136,6 +142,53 @@ public class TestAdmin {
 	         }
 	            
 	         Restaurant restaurant = restaurantBLL.insert(nom, adresse, url_image, carte);
+	         
+	         List<Horaire> horaires = new ArrayList<>();
+	         while (true) {
+	             System.out.println("Voulez-vous ajouter un horaire ? (oui/non)");
+	             String reponse = scan.nextLine();
+	             if (reponse.equalsIgnoreCase("non")) {
+	                 break;
+	             } else if (reponse.equalsIgnoreCase("oui")) {
+	                 System.out.println("Entrez le jour de la semaine (par exemple, Lundi) : ");
+	                 String jour = scan.nextLine();
+	                 if (estMenu(jour)) {
+	                     return;
+	                 }
+	                 
+	                 boolean jourExistant = horaires.stream().anyMatch(h -> h.getJour().equalsIgnoreCase(jour));
+	                 if (jourExistant) {
+	                     System.out.println("Ce jour est déjà enregistré pour un horaire. Veuillez choisir un autre jour.");
+	                     continue; 
+	                 }
+
+	                 System.out.println("Entrez l'heure d'ouverture (format HH:mm) : ");
+	                 String ouvertureStr = scan.nextLine();
+	                 if (estMenu(ouvertureStr)) {
+	                     return;
+	                 }
+	                 LocalTime ouverture = LocalTime.parse(ouvertureStr);
+
+	                 System.out.println("Entrez l'heure de fermeture (format HH:mm) : ");
+	                 String fermetureStr = scan.nextLine();
+	                 if (estMenu(fermetureStr)) {
+	                     return;
+	                 }
+	                 LocalTime fermeture = LocalTime.parse(fermetureStr);
+
+	                 Horaire horaire = new Horaire(jour, ouverture, fermeture);
+	                 try {
+	                     horaireBLL.insert(horaire, restaurant.getId());
+	                 } catch (HoraireException e) {
+	                     e.printStackTrace();
+	                 }
+	                 horaires.add(horaire);
+	             } else {
+	                 System.out.println("Réponse non valide, veuillez entrer 'oui' ou 'non'.");
+	             }
+	         }
+	         
+	         restaurant.setHoraires(horaires);
 		     System.out.println("Ajout du restaurant réussi !");
 		     System.out.println(restaurant);
 		     System.out.println("Entrée pour retourner au menu principal.");
@@ -180,9 +233,9 @@ public class TestAdmin {
 		        	 return;
 		         }
 		         
-		         System.out.println("Entrez l'ID de la carte du restaurant à associer, ou passez avec Entrée : ");
+		         System.out.println("Carte actuelle : " + restaurant.getCarte().getId() + " - " + restaurant.getCarte().getNom() + ". \nEntrez l'ID de la nouvelle carte, ou passez avec Entrée : ");
 			        String idCarte = scan.nextLine();
-			        Carte carte = null;
+			        Carte carte = restaurant.getCarte();
 			         
 			       	while (!idCarte.isBlank()) {
 			        	 if (estMenu(idCarte)) {
@@ -219,8 +272,102 @@ public class TestAdmin {
 	                    restaurant.setCarte(carte);
 	                }
 			       	
-			 
-			restaurantBLL.update(restaurant);
+		            List<Horaire> horaires = horaireBLL.selectHorairesByRestaurantId(restaurant.getId());
+		            System.out.println("Horaires actuels :");
+		            if (horaires.isEmpty()) {
+		                System.out.println("Aucun horaire enregistré.");
+		            } else {
+		                for (Horaire h : horaires) {
+		                    System.out.println(h.getJour() + " : " + h.getOuverture() + " - " + h.getFermeture());
+		                }
+		            }
+
+		            while (true) {
+		                System.out.println("Souhaitez-vous ajouter ou modifier des horaires ? (ajouter/modifier/non)");
+		                String reponse = scan.nextLine();
+		                if (reponse.equalsIgnoreCase("non")) {
+		                    break;
+		                } else if (reponse.equalsIgnoreCase("ajouter")) {
+		                    System.out.print("Entrez le jour de la semaine (par exemple, Lundi) : ");
+		                    String jour = scan.nextLine();
+		                    if (estMenu(jour)) {
+		                        return;
+		                    }
+
+		                    boolean jourExistant = horaires.stream().anyMatch(h -> h.getJour().equalsIgnoreCase(jour));
+		                    if (jourExistant) {
+		                        System.err.println("Ce jour est déjà enregistré. Veuillez choisir un autre jour.");
+		                        continue;
+		                    }
+
+		                    System.out.print("Entrez l'heure d'ouverture (format HH:mm) : ");
+		                    String ouvertureStr = scan.nextLine();
+		                    if (estMenu(ouvertureStr)) {
+		                        return;
+		                    }
+		                    LocalTime ouverture = LocalTime.parse(ouvertureStr);
+
+		                    System.out.print("Entrez l'heure de fermeture (format HH:mm) : ");
+		                    String fermetureStr = scan.nextLine();
+		                    if (estMenu(fermetureStr)) {
+		                        return;
+		                    }
+		                    LocalTime fermeture = LocalTime.parse(fermetureStr);
+
+		                    Horaire horaire = new Horaire(jour, ouverture, fermeture);
+		                    try {
+		                        horaireBLL.insert(horaire, restaurant.getId());
+		                    } catch (Exception e) {
+		                        e.printStackTrace();
+		                    }
+		                    horaires.add(horaire);
+		                } else if (reponse.equalsIgnoreCase("modifier")) {
+		                    System.out.print("Entrez le jour de la semaine à modifier (par exemple, Lundi) : ");
+		                    String jourAModifier = scan.nextLine();
+		                    if (estMenu(jourAModifier)) {
+		                        return;
+		                    }
+
+		                    Horaire horaireAModifier = horaires.stream()
+		                            .filter(h -> h.getJour().equalsIgnoreCase(jourAModifier))
+		                            .findFirst()
+		                            .orElse(null);
+
+		                    if (horaireAModifier != null) {
+		                        System.out.println("Horaire actuel : " + horaireAModifier.getOuverture() + " - " + horaireAModifier.getFermeture());
+
+		                        System.out.print("Entrez la nouvelle heure d'ouverture (format HH:mm) : ");
+		                        String nouvelleOuverture = scan.nextLine();
+		                        if (estMenu(nouvelleOuverture)) {
+		                            return;
+		                        }
+		                        LocalTime nouvelleOuvertureTime = LocalTime.parse(nouvelleOuverture);
+
+		                        System.out.print("Entrez la nouvelle heure de fermeture (format HH:mm) : ");
+		                        String nouvelleFermeture = scan.nextLine();
+		                        if (estMenu(nouvelleFermeture)) {
+		                            return;
+		                        }
+		                        LocalTime nouvelleFermetureTime = LocalTime.parse(nouvelleFermeture);
+
+		                        horaireAModifier.setOuverture(nouvelleOuvertureTime);
+		                        horaireAModifier.setFermeture(nouvelleFermetureTime);
+
+		                        try {
+		                            horaireBLL.update(horaireAModifier);
+		                        } catch (Exception e) {
+		                            e.printStackTrace();
+		                        }
+		                    } else {
+		                        System.err.println("Aucun horaire trouvé pour ce jour.");
+		                    }
+		                } else {
+		                    System.out.println("Réponse non valide, veuillez entrer 'ajouter', 'modifier' ou 'non'.");
+		                }
+		            }
+
+		    restaurant.setHoraires(horaires);
+		    restaurantBLL.update(restaurant);
 			System.out.println("Restaurant mis à jour !");
 			System.out.println("Mise à jour de la liste des restaurants...");
 			afficherRestaurants();
@@ -237,9 +384,14 @@ public class TestAdmin {
 	public static void afficherRestaurants() {
     	List<Restaurant> restaurants = restaurantBLL.select();
     	System.out.println("Liste des restaurants :");
+    	
     	for (Restaurant current : restaurants) {
-    		System.out.println(current);
-    	}
+    		List<Horaire> horaires = horaireBLL.selectHorairesByRestaurantId(current.getId());
+            current.setHoraires(horaires); 
+            System.out.println(current);
+        }
+    
+    	
     }
 	
 	// CASE 3
@@ -250,8 +402,6 @@ public class TestAdmin {
 		
 		Restaurant restaurant = restaurantBLL.select(id);
 		scan.nextLine();	
-		
-
 		
 		if(restaurant != null) {
 			System.err.println("Confirmez-vous la suppression de ce restaurant? oui/non");
